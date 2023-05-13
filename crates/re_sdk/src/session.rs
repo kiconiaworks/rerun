@@ -353,6 +353,7 @@ impl Session {
     /// Drains all pending log messages and saves them to disk into an rrd file.
     // TODO(cmc): We're gonna have to properly type all these errors all the way up to the encoding
     // methods in re_log_types at some point...
+    #[cfg(feature = "save")]
     #[cfg(not(target_arch = "wasm32"))]
     pub fn save(&mut self, path: impl Into<std::path::PathBuf>) -> anyhow::Result<()> {
         if !self.enabled {

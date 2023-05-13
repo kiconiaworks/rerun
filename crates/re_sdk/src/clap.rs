@@ -71,6 +71,7 @@ impl RerunArgs {
     }
 
     /// Run common post-actions. Sleep if serving the web viewer.
+    #[cfg(feature = "save")]
     pub fn on_teardown(&self, session: &mut Session) -> anyhow::Result<()> {
         let behavior = self.to_behavior();
 
@@ -82,6 +83,18 @@ impl RerunArgs {
 
         if let RerunBehavior::Save(path) = behavior {
             session.save(path)?;
+        }
+
+        Ok(())
+    }
+    #[cfg(not(feature = "save"))]
+    pub fn on_teardown(&self, session: &mut Session) -> anyhow::Result<()> {
+        let behavior = self.to_behavior();
+
+        #[cfg(feature = "web")]
+        if behavior == RerunBehavior::Serve {
+            eprintln!("Sleeping while serving the web viewer. Abort with Ctrl-C");
+            std::thread::sleep(std::time::Duration::from_secs(1_000_000));
         }
 
         Ok(())

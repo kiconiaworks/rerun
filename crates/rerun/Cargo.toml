@@ -76,7 +76,7 @@ re_web_server = { workspace = true, optional = true }
 webbrowser = { version = "0.8", optional = true }
 
 # Native dependencies:
-[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+[target.'cfg(all(not(target_arch = "wasm32"), not(target_os = "ios")))'.dependencies]
 clap = { workspace = true, features = ["derive"] }
 mimalloc.workspace = true
 puffin_http = "0.11"
